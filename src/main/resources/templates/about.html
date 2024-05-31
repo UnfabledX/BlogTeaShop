@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -30,6 +31,11 @@
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/about}">About</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/post}">Sample Post</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/contact}">Contact</a></li>
+                        <li class="nav-item" sec:authorize="!isAnonymous()">
+                            <a class="nav-link px-lg-3 py-3 py-lg-4" href="#">
+                                [[#{user.greeting}]]<span sec:authentication="name"></span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
