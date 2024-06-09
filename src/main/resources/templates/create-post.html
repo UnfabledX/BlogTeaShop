@@ -42,7 +42,7 @@
                        data-bs-toggle="dropdown" aria-expanded="false" th:text="#{chooseLang}">
                         Choose language
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="left: auto; --bs-dropdown-bg: #ffffff4d;">
                         <li><a class="dropdown-item" th:href="@{'/create-post?lang=en'}" href="#"
                                th:text="#{lang.en}">English</a></li>
                         <li><a class="dropdown-item" th:href="@{'/create-post?lang=ukr'}" href="#"
@@ -81,16 +81,16 @@
                                 Enter the title in Ukrainian:</label>
                         </h5>
                         <h1><input type="text" id="titleUA" th:field="*{titleUA}"></h1>
-                        <p class="error-style" th:if="${#fields.hasErrors('titleUA')}" th:errors="*{titleUA}">
-                            Incorrect data</p>
+                        <h6 class="error-style" th:if="${#fields.hasErrors('titleUA')}" th:errors="*{titleUA}">
+                            Incorrect data</h6>
                         <!-- form for entering the post title -->
                         <h5>
                             <label for="titleEN" class="form-label" th:text="#{placeholder.post.titleEN}">
                                 Enter the title in English:</label>
                         </h5>
                         <h1><input type="text" id="titleEN" th:field="*{titleEN}"></h1>
-                        <p class="error-style" th:if="${#fields.hasErrors('titleEN')}" th:errors="*{titleEN}">
-                            Incorrect data</p>
+                        <h6 class="error-style" th:if="${#fields.hasErrors('titleEN')}" th:errors="*{titleEN}">
+                            Incorrect data</h6>
 
                         <div class="subheading">
                             <!-- form for entering the post subtitle -->
@@ -99,19 +99,24 @@
                                     Enter the subtitle in Ukrainian:</label>
                             </h5>
                             <h2><input type="text" id="subtitleUA" th:field="*{subtitleUA}"></h2>
-                            <p class="error-style" th:if="${#fields.hasErrors('subtitleUA')}" th:errors="*{subtitleUA}">
-                                Incorrect data</p>
+                            <h6 class="error-style" th:if="${#fields.hasErrors('subtitleUA')}" th:errors="*{subtitleUA}">
+                                Incorrect data</h6>
                             <h5>
                                 <label for="subtitleEN" class="form-label" th:text="#{placeholder.post.subtitleEN}">
                                     Enter the subtitle in English:</label>
                             </h5>
                             <h2><input type="text" id="subtitleEN" th:field="*{subtitleEN}"></h2>
-                            <p class="error-style" th:if="${#fields.hasErrors('subtitleEN')}" th:errors="*{subtitleEN}">
-                                Incorrect data</p>
+                            <h6 class="error-style" th:if="${#fields.hasErrors('subtitleEN')}" th:errors="*{subtitleEN}">
+                                Incorrect data</h6>
                         </div>
                         <span class="meta" th:text="#{posted-on}">
                                 Posted on August 24, 2023
                         </span>
+                        <p>
+                            <label for="formFile" class="form-label" th:text="#{label.addImage}">Add one image for the
+                                post background:</label>
+                            <input class="form-control" type="file" name="backgroundImage" id="formFile">
+                        </p>
                     </div>
                 </div>
             </div>
@@ -132,9 +137,14 @@
                     <textarea id="contentEU" name="contentEU" rows="10" cols="70" th:field="*{contentEN}"></textarea>
                     <p class="error-style" th:if="${#fields.hasErrors('contentEN')}" th:errors="*{contentEN}">Incorrect
                         data</p>
+                    <p>
+                        <label for="formFiles" class="form-label" th:text="#{label.addPostImages}">
+                            Add one or several images for the post:</label>
+                        <input class="form-control" type="file" name="postImages" id="formFiles" multiple>
+                    </p>
                     <p><input class="btn btn-success mb-3" type="submit" th:value="#{create.post}"></p>
                     <details>
-                        <summary th:text="#{post.example}">  See an example of creating content with html tags:</summary>
+                        <summary th:text="#{post.example}"> See an example of creating content with html tags:</summary>
                         <ul>
                             <li>
                                 <b th:text="#{paragraphs}">Paragraphs:</b> <br/>
@@ -238,7 +248,6 @@
             </div>
         </div>
     </article>
-
 </form>
 
 <!-- Footer-->
@@ -272,7 +281,7 @@
                         </a>
                     </li>
                 </ul>
-                <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2023</div>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; Notka Tea 2024</div>
             </div>
         </div>
     </div>
