@@ -17,6 +17,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(
+                                "/create-post"
+                        ).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(PathRequest.toStaticResources()
                                 .atCommonLocations()).permitAll()
                         .anyRequest().permitAll()

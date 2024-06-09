@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Clean Blog - Start Bootstrap Theme</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+          rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        .error-style {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" th:href="@{/}">Notka Tea</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/}" th:text="#{home}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false" th:text="#{chooseLang}">
+                        Choose language
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{'/create-post?lang=en'}" href="#"
+                               th:text="#{lang.en}">English</a></li>
+                        <li><a class="dropdown-item" th:href="@{'/create-post?lang=ukr'}" href="#"
+                               th:text="#{lang.ukr}">Ukrainian</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/about}" th:text="#{about}">About</a>
+                </li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/contact}"
+                                        th:text="#{contact}">Contact</a></li>
+                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/create-post}" th:text="#{create.post}">Create a
+                        Post</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="#">
+                        [[#{user.greeting}]]<span sec:authentication="name"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<form action="#" th:action="@{'/addPost'}" th:object="${post}" method="post" enctype="multipart/form-data">
+
+    <!-- Page Header-->
+    <header class="masthead" th:style="'background-image:url(' + @{/assets/img/post-bg.jpg} + ');'">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="post-heading">
+                        <!-- form for entering the post title -->
+                        <h5>
+                            <label for="titleUA" class="form-label" th:text="#{placeholder.post.titleUA}">
+                                Enter the title in Ukrainian:</label>
+                        </h5>
+                        <h1><input type="text" id="titleUA" th:field="*{titleUA}"></h1>
+                        <p class="error-style" th:if="${#fields.hasErrors('titleUA')}" th:errors="*{titleUA}">
+                            Incorrect data</p>
+                        <!-- form for entering the post title -->
+                        <h5>
+                            <label for="titleEN" class="form-label" th:text="#{placeholder.post.titleEN}">
+                                Enter the title in English:</label>
+                        </h5>
+                        <h1><input type="text" id="titleEN" th:field="*{titleEN}"></h1>
+                        <p class="error-style" th:if="${#fields.hasErrors('titleEN')}" th:errors="*{titleEN}">
+                            Incorrect data</p>
+
+                        <div class="subheading">
+                            <!-- form for entering the post subtitle -->
+                            <h5>
+                                <label for="subtitleUA" class="form-label" th:text="#{placeholder.post.subtitleUA}">
+                                    Enter the subtitle in Ukrainian:</label>
+                            </h5>
+                            <h2><input type="text" id="subtitleUA" th:field="*{subtitleUA}"></h2>
+                            <p class="error-style" th:if="${#fields.hasErrors('subtitleUA')}" th:errors="*{subtitleUA}">
+                                Incorrect data</p>
+                            <h5>
+                                <label for="subtitleEN" class="form-label" th:text="#{placeholder.post.subtitleEN}">
+                                    Enter the subtitle in English:</label>
+                            </h5>
+                            <h2><input type="text" id="subtitleEN" th:field="*{subtitleEN}"></h2>
+                            <p class="error-style" th:if="${#fields.hasErrors('subtitleEN')}" th:errors="*{subtitleEN}">
+                                Incorrect data</p>
+                        </div>
+                        <span class="meta" th:text="#{posted-on}">
+                                Posted on August 24, 2023
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Post Content-->
+    <article class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Content in Ukrainian -->
+                    <label for="contentUA" class="form-label" th:text="#{contentUA}">Content in Ukrainian</label>
+                    <textarea id="contentUA" name="contentUA" rows="10" cols="70" th:field="*{contentUA}"></textarea>
+                    <p class="error-style" th:if="${#fields.hasErrors('contentUA')}" th:errors="*{contentUA}">Incorrect
+                        data</p>
+                    <!-- Content in English -->
+                    <label for="contentEU" class="form-label" th:text="#{contentEN}">Content in English</label>
+                    <textarea id="contentEU" name="contentEU" rows="10" cols="70" th:field="*{contentEN}"></textarea>
+                    <p class="error-style" th:if="${#fields.hasErrors('contentEN')}" th:errors="*{contentEN}">Incorrect
+                        data</p>
+                    <p><input class="btn btn-success mb-3" type="submit" th:value="#{create.post}"></p>
+                    <details>
+                        <summary th:text="#{post.example}">  See an example of creating content with html tags:</summary>
+                        <ul>
+                            <li>
+                                <b th:text="#{paragraphs}">Paragraphs:</b> <br/>
+                                &lt;p&gt; Science cuts two ways, of course; its products can be used for both good and
+                                evil.
+                                But there's no turning back from science. The early warnings about technological dangers
+                                also come from
+                                science. &lt;/p&gt;
+                                &lt;p&gt; What was most significant about the lunar voyage was not that man set foot on
+                                the
+                                Moon but that they set eye on the earth. &lt;/p&gt; <br/>
+                                <p><b th:text="#{will-look-like}">Will look like:</b></p>
+                                <p>Science cuts two ways, of course; its products can be used for both good and evil.
+                                    But there's no turning back from science. The early warnings about technological
+                                    dangers also come
+                                    from science.</p>
+                                <p>What was most significant about the lunar voyage was not that man set foot on the
+                                    Moon but that they set eye on the earth.</p>
+                            </li>
+                            <li>
+                                <b th:text="#{section.heading}">Section heading:</b> <br/>
+                                &lt;h2 class=&quot;section-heading&quot;&gt;The Final Frontier&lt;/h2&gt; <br/>
+                                <p><b th:text="#{will-look-like}">Will look like:</b></p>
+                                <p>For those who have seen the Earth from space, and for the hundreds and perhaps
+                                    thousands more who
+                                    will, the experience most certainly changes your perspective. The things that we
+                                    share in our
+                                    world are far more valuable than those which divide us.</p>
+                                <h2 class="section-heading">The Final Frontier</h2>
+                                <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively
+                                    and literally,
+                                    it is a task to occupy the generations. And no matter how much progress one makes,
+                                    there is
+                                    always the thrill of just beginning.</p>
+                            </li>
+                            <li>
+                                <b th:text="#{insert.quotes}">Insert quotes:</b> <br/>
+                                &lt;blockquote class=&quot;blockquote&quot;&gt;The dreams of yesterday are the hopes of
+                                today and the reality of
+                                tomorrow. Science has not yet mastered prophecy. We predict too much for the next year
+                                and yet
+                                far too little for the next ten.
+                                &lt;/blockquote&gt; <br/>
+                                <p><b th:text="#{will-look-like}">Will look like:</b></p>
+                                <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively
+                                    and literally,
+                                    it is a task to occupy the generations. And no matter how much progress one makes,
+                                    there is
+                                    always the thrill of just beginning.</p>
+                                <blockquote class="blockquote">The dreams of yesterday are the hopes of today and the
+                                    reality of
+                                    tomorrow. Science has not yet mastered prophecy. We predict too much for the next
+                                    year and yet
+                                    far too little for the next ten.
+                                </blockquote>
+                                <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group
+                                    of men. It is
+                                    a historical process which mankind is carrying out in accordance with the natural
+                                    laws of human
+                                    development.</p>
+                            </li>
+                            <li>
+                                <b th:text="#{image-with-comments}">Insert image with some comments underneath:</b>
+                                <br/>
+                                &lt;a href=&quot;#!&quot;&gt; <br/> &nbsp;&nbsp;&nbsp; &lt;img class=&quot;img-fluid&quot;
+                                th:src=&quot;@{NameOfTheImage}&quot;
+                                alt=&quot;...&quot;/&gt; <br/> &lt;/a&gt; <br/>
+                                &lt;span class=&quot;caption text-muted&quot;&gt; <br/>To go places and do things that
+                                have
+                                never been done before &ndash; that&rsquo;s what living is all about. <br/>&lt;/span&gt;
+                                <br/>
+                                <p><b th:text="#{will-look-like}">Will look like:</b></p>
+                                <p>As we got further and further away, it [the Earth] diminished in size. Finally it
+                                    shrank to the
+                                    size of a marble, the most beautiful you can imagine. That beautiful, warm, living
+                                    object looked
+                                    so fragile, so delicate, that if you touched it with a finger it would crumble and
+                                    fall apart.
+                                    Seeing this has to change a man.</p>
+                                <a href="#!"><img class="img-fluid" th:src="@{assets/img/post-sample-image.jpg}"
+                                                  alt="..."/></a>
+                                <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
+                                <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its
+                                    five-year
+                                    mission: to explore strange new worlds, to seek out new life and new civilizations,
+                                    to boldly go
+                                    where no man has gone before.</p>
+                            </li>
+                            <li>
+                                <b th:text="#{insert.link}">Insert Link to another website:</b> <br/>
+                                Images by <br/> &lt;a href=&quot;https://www.flickr.com/photos/nasacommons/&quot;&gt;
+                                NASA on
+                                The Commons <br/> &lt;/a&gt; <br/>
+                                <p><b th:text="#{will-look-like}">Will look like:</b></p>
+                                Images by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The
+                                Commons</a>
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </article>
+
+</form>
+
+<!-- Footer-->
+<footer class="border-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2023</div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.7/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+<!-- Core theme JS-->
+<!--        <script src="js/scripts.js"></script>-->
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

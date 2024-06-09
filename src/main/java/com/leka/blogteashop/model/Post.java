@@ -2,6 +2,15 @@ package com.leka.blogteashop.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @ToString
 @Builder
@@ -12,6 +21,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 
     @Id
@@ -27,8 +37,11 @@ public class Post {
     private String content;
 
     @Column(nullable = false)
+    @CreatedBy
     private String author;
 
-
-
+    @Column(name = "created_at")
+    @CreationTimestamp
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime createdAt;
 }
