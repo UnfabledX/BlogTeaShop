@@ -1,7 +1,10 @@
 package com.leka.blogteashop.controller;
 
+import com.leka.blogteashop.dto.ImageDto;
 import com.leka.blogteashop.dto.PostDto;
 import com.leka.blogteashop.dto.PostResponse;
+import com.leka.blogteashop.dto.PostResponseOnlyId;
+import com.leka.blogteashop.service.MediaService;
 import com.leka.blogteashop.service.PostService;
 import com.leka.blogteashop.service.impl.AuthService;
 import com.leka.blogteashop.service.jwt.JwtService;
@@ -15,10 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -31,6 +31,7 @@ public class BlogController {
     private final JwtService jwtService;
     private final AuthService authService;
     private final PostService postService;
+    private final MediaService mediaService;
 
     @GetMapping("/about")
     public String getAbout() {
@@ -42,11 +43,6 @@ public class BlogController {
     @GetMapping("/contact")
     public String getContacts() {
         return "contact";
-    }
-
-    @GetMapping("/post")
-    public String getPost() {
-        return "post";
     }
 
     @GetMapping("/main")
@@ -68,15 +64,28 @@ public class BlogController {
     }
 
     @PostMapping("/addPost")
-    public String addProduct(@RequestParam("backgroundImage") MultipartFile bgImage,
-                             @RequestParam("postImages") List<MultipartFile> postImages,
+    public String addProduct(@RequestParam(value = "backgroundImage", required = false) MultipartFile bgImage,
+                             @RequestParam(value = "postImages", required = false) List<MultipartFile> postImages,
                              @Valid @ModelAttribute("post") PostDto postDto,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
             return getCreatePost(postDto, model);
         }
-        PostResponse response = postService.addPost(postDto, bgImage, postImages);
+        PostResponseOnlyId response = postService.addPost(postDto, bgImage, postImages);
         return "redirect:/post/" + response.getId();
+    }
+
+    @GetMapping("/post/{postId}")
+    public String getPost(@PathVariable Long postId, Model model) {
+        PostResponse response = postService.getPostById(postId);
+        model.addAttribute("post", response);
+        return "post";
+    }
+
+    @ResponseBody
+    @GetMapping("/image/{id}")
+    public byte[] getImageById(@PathVariable("id") Long id) {
+        return mediaService.getImageByIdWithData(id).getData();
     }
 
 }

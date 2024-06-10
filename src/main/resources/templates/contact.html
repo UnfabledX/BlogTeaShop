@@ -40,10 +40,10 @@
                                        th:text="#{lang.ukr}">Ukrainian</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/about}">About</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/contact}">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/about}" th:text="#{about}">About</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/contact}" th:text="#{contact}">Contact</a></li>
                         <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
-                            <a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/create-post}">Create a Post</a>
+                            <a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/create-post}" th:text="#{create.post}">Create a Post</a>
                         </li>
                         <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
                             <a class="nav-link px-lg-3 py-3 py-lg-4" href="#">

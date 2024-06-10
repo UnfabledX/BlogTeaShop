@@ -2,6 +2,8 @@ package com.leka.blogteashop.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @ToString
 @Setter
 @Getter
@@ -11,4 +13,10 @@ import lombok.*;
 public class PostResponse {
 
     private Long id;
+    private String title;
+    private String subtitle;
+    private String content;
+    private String author;
+    private String createdAt;
+    private Long backgroundImageId;
 }
