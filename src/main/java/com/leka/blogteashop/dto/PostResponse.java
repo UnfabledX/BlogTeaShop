@@ -2,8 +2,6 @@ package com.leka.blogteashop.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @ToString
 @Setter
 @Getter

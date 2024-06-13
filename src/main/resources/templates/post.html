@@ -56,8 +56,8 @@
         </nav>
         <!-- Page Header-->
         <header class="masthead" th:if="${post.backgroundImageId == null}"
-                th:style="'background-image:url(' + @{/assets/img/post-bg.jpg} + ');'">>
-            <div class="container position-relative px-4 px-lg-5">
+                th:style="'background-image:url(' + @{/assets/img/post-bg.jpg} + ');'">
+            <div class="container position-relative px-4 px-lg-5" th:fragment="header-for-post">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="post-heading">
@@ -74,20 +74,7 @@
         </header>
         <header class="masthead" th:if="${post.backgroundImageId != null}"
                 th:style="'background-image:url(' + @{'/image/' + ${post.backgroundImageId}} + ');'">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="post-heading">
-                            <h1 th:text="${@postLanguageSwitcher.defineLanguageOf(post.title)}">Title</h1>
-                            <h2 class="subheading" th:text="${@postLanguageSwitcher.defineLanguageOf(post.subtitle)}">SubTitle</h2>
-                            <span class="meta">
-                                [[#{posted.by}]]&nbsp;<a href="#!" th:text="${post.author}">Author name</a>&nbsp;[[#{on}]]&nbsp;
-                                <span th:text="${post.createdAt}">on August 24, 2024</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="~{::header-for-post}"></div>
         </header>
         <!-- Post Content-->
         <article class="mb-4">
@@ -95,6 +82,9 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div th:utext="${@postLanguageSwitcher.defineLanguageOf(post.content)}"> Content </div>
+                        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                            <a th:href="@{'/edit-post/' + ${postId}}" class="btn btn-outline-primary" th:text="#{edit.post}">Edit the Post</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,7 +120,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="small text-center text-muted fst-italic">Copyright &copy; Your Website 2023</div>
+                        <div class="small text-center text-muted fst-italic">Copyright &copy; Notka Tea 2024</div>
                     </div>
                 </div>
             </div>

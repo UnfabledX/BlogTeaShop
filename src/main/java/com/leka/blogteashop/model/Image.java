@@ -2,16 +2,14 @@ package com.leka.blogteashop.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "images")
 public class Image {
 

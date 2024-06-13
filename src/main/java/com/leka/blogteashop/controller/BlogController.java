@@ -1,6 +1,6 @@
 package com.leka.blogteashop.controller;
 
-import com.leka.blogteashop.dto.ImageDto;
+import com.leka.blogteashop.dto.EditPostDto;
 import com.leka.blogteashop.dto.PostDto;
 import com.leka.blogteashop.dto.PostResponse;
 import com.leka.blogteashop.dto.PostResponseOnlyId;
@@ -18,10 +18,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.leka.blogteashop.utils.Validator.validateImageNamingInContent;
 
 @Log4j2
 @Controller
@@ -64,10 +67,16 @@ public class BlogController {
     }
 
     @PostMapping("/addPost")
-    public String addProduct(@RequestParam(value = "backgroundImage", required = false) MultipartFile bgImage,
-                             @RequestParam(value = "postImages", required = false) List<MultipartFile> postImages,
-                             @Valid @ModelAttribute("post") PostDto postDto,
-                             BindingResult result, Model model) {
+    public String addPost(@RequestParam(value = "backgroundImage", required = false) MultipartFile bgImage,
+                          @RequestParam(value = "postImages", required = false) List<MultipartFile> postImages,
+                          @Valid @ModelAttribute("post") PostDto postDto,
+                          BindingResult result, Model model) {
+        //check that file names in the content are the same names of uploaded files.
+        boolean isValid = validateImageNamingInContent(postImages, postDto.getContentUA(), postDto.getContentEN());
+        if (!isValid) {
+            result.addError(new ObjectError("post",
+                    "Please, check image names (i.e. \"@{post_image.jpg}\") in the content sections"));
+        }
         if (result.hasErrors()) {
             return getCreatePost(postDto, model);
         }
@@ -80,6 +89,31 @@ public class BlogController {
         PostResponse response = postService.getPostById(postId);
         model.addAttribute("post", response);
         return "post";
+    }
+
+    @GetMapping("/edit-post/{postId}")
+    public String getEditPost(@PathVariable Long postId, Model model) {
+        EditPostDto dto = postService.getEditPostDtoById(postId);
+        model.addAttribute("post", dto);
+        return "edit-post";
+    }
+
+    @PostMapping("/editPost/{postId}")
+    public String editPost(@PathVariable Long postId,
+                           @RequestParam(value = "backgroundImage", required = false) MultipartFile bgImage,
+                           @RequestParam(value = "postImages", required = false) List<MultipartFile> postImages,
+                           @Valid @ModelAttribute("post") EditPostDto postDto,
+                           BindingResult result, Model model) {
+        boolean isValid = validateImageNamingInContent(postImages, postDto.getContentUA(), postDto.getContentEN());
+        if (!isValid) {
+            result.addError(new ObjectError("post",
+                    "Please, check image names (i.e. \"@{post_image.jpg}\") in the content sections"));
+        }
+        if (result.hasErrors()) {
+            return getEditPost(postId, model);
+        }
+        postService.editPost(postId, postDto, bgImage, postImages);
+        return "redirect:/post/" + postId;
     }
 
     @ResponseBody

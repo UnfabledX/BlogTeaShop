@@ -19,4 +19,17 @@ public class PostLanguageSwitcher {
         }
         return description;
     }
+
+    public String showLanguageSpecificContent(String content, String language) {
+        if (content.contains("#&#")) {
+            String[] descriptions = content.split("#&#");
+            switch (language) {
+                case "ukr" -> content = descriptions[0];
+                case "en" -> content = descriptions[1];
+                // if any other string passed to the method argument language
+                default -> content = descriptions[0];
+            }
+        }
+        return content;
+    }
 }

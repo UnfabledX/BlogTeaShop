@@ -50,4 +50,8 @@ public class Post {
     public void addImage(Image image) {
         this.postImages.add(image);
     }
+
+    public void removeImage(Image image) {
+        this.postImages.removeIf(existingImage -> existingImage.getImageName().equals(image.getImageName()));
+    }
 }

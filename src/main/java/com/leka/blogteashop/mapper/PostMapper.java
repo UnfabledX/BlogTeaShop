@@ -1,5 +1,6 @@
 package com.leka.blogteashop.mapper;
 
+import com.leka.blogteashop.dto.EditPostDto;
 import com.leka.blogteashop.dto.PostDto;
 import com.leka.blogteashop.dto.PostResponse;
 import com.leka.blogteashop.dto.PostResponseOnlyId;
@@ -51,7 +52,7 @@ public class PostMapper {
                 } else {
                     String target = Pattern.quote("@{%s}".formatted(postImage.getImageName()));
                     String replacement = "%s/image/%d".formatted(contextPath, postImage.getImageId());
-                    content = content.replaceFirst(target, replacement);
+                    content = content.replaceAll(target, replacement);
                 }
             }
         }
@@ -72,5 +73,38 @@ public class PostMapper {
     public PostResponseOnlyId toResponseOnlyId(Post post) {
         if (post == null) return new PostResponseOnlyId();
         return PostResponseOnlyId.builder().id(post.getId()).build();
+    }
+
+    public EditPostDto toEditPostDto(Post post) {
+        String title = post.getTitle();
+        String[] titles = title.split("#&#");
+        String subtitle = post.getSubtitle();
+        String[] subtitles = subtitle.split("#&#");
+        String content = post.getContent();
+        String[] contents = content.split("#&#");
+        List<Image> postImageNames = post.getPostImages();
+        Long backgroundImageId = null;
+        for (Image postImage : postImageNames) {
+            if (postImage.getImageName().startsWith(PREFIX_BACKGROUND_IMAGE)) {
+                backgroundImageId = postImage.getImageId();
+                break;
+            }
+        }
+        return EditPostDto.builder()
+                .id(post.getId())
+                .titleUA(titles[0])
+                .titleEN(titles[1])
+                .subtitleUA(subtitles[0])
+                .subtitleEN(subtitles[1])
+                .contentUA(contents[0])
+                .contentEN(contents[1])
+                .backgroundImageId(backgroundImageId)
+                .build();
+    }
+
+    public void updatePost(Post post, EditPostDto postDto) {
+        post.setTitle(postDto.getTitleUA() + "#&#" + postDto.getTitleEN());
+        post.setSubtitle(postDto.getSubtitleUA() + "#&#" + postDto.getSubtitleEN());
+        post.setContent(postDto.getContentUA() + "#&#" + postDto.getContentEN());
     }
 }
