@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 public class Validator {
 
     public static boolean validateImageNamingInContent(List<MultipartFile> images, String ... contents) {
-        if (images != null && !images.isEmpty()) {
+        if (!images.isEmpty() && !images.get(0).isEmpty()) {
             for (String content : contents) {
                 for (MultipartFile image : images) {
-                    String target = Pattern.quote("@{%s}".formatted(image.getOriginalFilename()));
+                    String target = "@{%s}".formatted(image.getOriginalFilename());
                     if (!StringUtils.contains(content, target)) {
                         return false;
                     }

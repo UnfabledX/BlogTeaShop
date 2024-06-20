@@ -43,10 +43,11 @@ public class BlogConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("/webjars/");
-        registry.addResourceHandler("/post/webjars/**")
-                .addResourceLocations("/webjars/");
+        registry.addResourceHandler(
+                "/webjars/**",
+                        "/post/webjars/**",
+                        "/editPost/webjars/**"
+                ).addResourceLocations("/webjars/");
     }
 
 }

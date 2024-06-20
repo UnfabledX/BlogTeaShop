@@ -76,7 +76,10 @@ public class PostServiceImpl implements PostService {
         }
         //delete old files by checking that the image name is not found in updated contents of EditPostDto
         for (Image image: imagesBeforeUpdate) {
-            String target = Pattern.quote("@{%s}".formatted(image.getImageName()));
+            String target = "@{%s}".formatted(image.getImageName());
+            //in order to delete old images from database, we have to check that all contents in different languages
+            //don't include references to image names, if the admin forgets to delete in English version for example,
+            // the image won't be deleted in general and will be shown in English content only.
             if (!StringUtils.contains(postDto.getContentUA(), target)
                     && !StringUtils.contains(postDto.getContentEN(), target) ){
                 Long imageId = image.getImageId();
