@@ -4,6 +4,8 @@ import com.leka.blogteashop.dto.EditPostDto;
 import com.leka.blogteashop.dto.PostDto;
 import com.leka.blogteashop.dto.PostResponse;
 import com.leka.blogteashop.dto.PostResponseOnlyId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,4 +19,6 @@ public interface PostService {
     EditPostDto getEditPostDtoById(Long postId);
 
     void editPost(Long postId, EditPostDto postDto, MultipartFile bgImage, List<MultipartFile> postImages);
+
+    Page<PostResponse> getPosts(Pageable pageable);
 }

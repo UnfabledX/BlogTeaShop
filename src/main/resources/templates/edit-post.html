@@ -27,7 +27,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" th:href="@{/}">Notka Tea</a>
+        <a class="navbar-brand" th:href="@{/to-main-online-shop}">Notka Tea</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             Menu
@@ -80,7 +80,7 @@
                             <label for="titleUA" class="form-label" th:text="#{placeholder.post.titleUA}">
                                 Enter the title in Ukrainian:</label>
                         </h5>
-                        <h1><input type="text" id="titleUA" th:field="*{titleUA}"></h1>
+                        <h2><textarea type="text" id="titleUA" cols="40" th:field="*{titleUA}"></textarea></h2>
                         <h6 class="error-style" th:if="${#fields.hasErrors('titleUA')}" th:errors="*{titleUA}">
                             Incorrect data</h6>
                         <!-- form for entering the post title -->
@@ -88,7 +88,7 @@
                             <label for="titleEN" class="form-label" th:text="#{placeholder.post.titleEN}">
                                 Enter the title in English:</label>
                         </h5>
-                        <h1><input type="text" id="titleEN" th:field="*{titleEN}"></h1>
+                        <h2><textarea type="text" id="titleEN" cols="40" th:field="*{titleEN}"></textarea></h2>
                         <h6 class="error-style" th:if="${#fields.hasErrors('titleEN')}" th:errors="*{titleEN}">
                             Incorrect data</h6>
 
@@ -98,14 +98,14 @@
                                 <label for="subtitleUA" class="form-label" th:text="#{placeholder.post.subtitleUA}">
                                     Enter the subtitle in Ukrainian:</label>
                             </h5>
-                            <h2><input type="text" id="subtitleUA" th:field="*{subtitleUA}"></h2>
+                            <h2><textarea type="text" id="subtitleUA" cols="60" th:field="*{subtitleUA}"></textarea></h2>
                             <h6 class="error-style" th:if="${#fields.hasErrors('subtitleUA')}" th:errors="*{subtitleUA}">
                                 Incorrect data</h6>
                             <h5>
                                 <label for="subtitleEN" class="form-label" th:text="#{placeholder.post.subtitleEN}">
                                     Enter the subtitle in English:</label>
                             </h5>
-                            <h2><input type="text" id="subtitleEN" th:field="*{subtitleEN}"></h2>
+                            <h2><textarea type="text" id="subtitleEN" cols="60" th:field="*{subtitleEN}"></textarea></h2>
                             <h6 class="error-style" th:if="${#fields.hasErrors('subtitleEN')}" th:errors="*{subtitleEN}">
                                 Incorrect data</h6>
                         </div>

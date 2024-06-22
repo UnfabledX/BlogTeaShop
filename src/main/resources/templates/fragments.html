@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="updated-list">
+    <div th:each="post: ${postList}" id="list-of-posts">
+        <!-- Post preview-->
+        <div class="post-preview">
+            <a href="#" th:href="@{'/post' + ${post.id}}">
+                <h2 class="post-title" th:text="${@postLanguageSwitcher.defineLanguageOf(post.title)}"></h2>
+                <h3 class="post-subtitle" th:text="${@postLanguageSwitcher.defineLanguageOf(post.subtitle)}"></h3>
+            </a>
+            <p class="post-meta">
+                [[#{posted.by}]]&nbsp;<a href="#!" th:text="${post.author}">Author name</a>&nbsp;[[#{on}]]&nbsp;
+                <span th:text="${post.createdAt}">on August 24, 2024</span>
+            </p>
+        </div>
+        <!-- Divider-->
+        <hr class="my-4"/>
+    </div>
+</div>
+</body>
+</html>
