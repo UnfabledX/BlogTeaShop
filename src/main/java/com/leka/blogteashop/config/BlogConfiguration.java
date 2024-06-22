@@ -3,20 +3,12 @@ package com.leka.blogteashop.config;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.springframework.context.annotation.ScopedProxyMode.INTERFACES;
-import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
 @Configuration
 public class BlogConfiguration implements WebMvcConfigurer {
@@ -53,9 +45,10 @@ public class BlogConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(
                 "/webjars/**",
-                        "/post/webjars/**",
-                        "/editPost/webjars/**"
-                ).addResourceLocations("/webjars/");
+                "/post/webjars/**",
+                "/editPost/webjars/**",
+                "/edit-post/webjars/**"
+        ).addResourceLocations("/webjars/");
     }
 
 }
