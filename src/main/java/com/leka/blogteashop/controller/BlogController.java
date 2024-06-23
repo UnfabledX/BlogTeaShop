@@ -8,14 +8,12 @@ import com.leka.blogteashop.service.MediaService;
 import com.leka.blogteashop.service.PostService;
 import com.leka.blogteashop.service.impl.AuthService;
 import com.leka.blogteashop.service.jwt.JwtService;
+import com.leka.blogteashop.utils.Counter;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,12 +37,13 @@ import static com.leka.blogteashop.utils.Validator.validateImageNamingInContent;
 @RequiredArgsConstructor
 public class BlogController {
 
-    public static final int DEFAULT_SIZE = 4;
+    public static final int DEFAULT_SIZE = 5;
 
     private final JwtService jwtService;
     private final AuthService authService;
     private final PostService postService;
     private final MediaService mediaService;
+    private final Counter counter;
 
     @Value("${teashop.link}")
     private String toOnlineTeaShop;
@@ -66,14 +65,17 @@ public class BlogController {
 
     @GetMapping("/main")
     public String getMainPage(@RequestParam(value = "token", required = false) String token,
-                              @PageableDefault(size = DEFAULT_SIZE, sort = "createdAt", direction = Sort.Direction.DESC)
-                              Pageable pageable, Model model, HttpServletRequest request) {
+                              Model model, HttpServletRequest request) {
         if (token == null || jwtService.isTokenExpired(token)) {
             authService.authenticateTheAnonymousUser(request);
+            PageRequest pageable = getPageRequest();
+            Page<PostResponse> postResponses = postService.getPosts(pageable);
+            model.addAttribute("postList", postResponses);
             return "index";
         }
         Claims claims = jwtService.getAllClaims(token);
         authService.authenticateTheUser(request, claims);
+        PageRequest pageable = getPageRequest();
         Page<PostResponse> postResponses = postService.getPosts(pageable);
         model.addAttribute("postList", postResponses);
         return "index";
@@ -94,7 +96,7 @@ public class BlogController {
         boolean isValid = validateImageNamingInContent(postImages, postDto.getContentUA(), postDto.getContentEN());
         if (!isValid) {
             result.addError(new ObjectError("post",
-                    "Please, check image names (i.e. \"@{post_image.jpg}\") in the content sections"));
+                    "Please, check image names (i.e. \"@{post_image.jpg}\") in the content sections")); // check todo
         }
         if (result.hasErrors()) {
             return getCreatePost(postDto, model);
@@ -142,24 +144,25 @@ public class BlogController {
     }
 
     @GetMapping("/")
-    public String getMainPageInternally(
-            @PageableDefault(size = DEFAULT_SIZE, sort = "createdAt", direction = Sort.Direction.DESC)
-            Pageable pageable, Model model) {
+    public String getMainPageInternally(Model model) {
+        PageRequest pageable = getPageRequest();
         Page<PostResponse> postResponses = postService.getPosts(pageable);
         model.addAttribute("postList", postResponses);
         return "index";
     }
 
     @PostMapping("/loadMorePosts")
-    public String loadMorePosts(@CookieValue(value = "counter", defaultValue = "0") Integer counter,
-                                Model model, HttpServletResponse response) {
-        counter++;
-        int size = DEFAULT_SIZE * (counter + 1);
-        PageRequest pageable = PageRequest.of(0, size, Sort.by("createdAt").descending());
+    public String loadMorePosts(Model model) {
+        counter.increment();
+        PageRequest pageable = getPageRequest();
         Page<PostResponse> postResponses = postService.getPosts(pageable);
         model.addAttribute("postList", postResponses);
-        response.addCookie(new Cookie("counter", counter.toString()));
         return "fragments :: updated-list";
+    }
+
+    private PageRequest getPageRequest() {
+        int size = DEFAULT_SIZE * (counter.getCount() + 1);
+        return PageRequest.of(0, size, Sort.by("createdAt").descending());
     }
 
 }

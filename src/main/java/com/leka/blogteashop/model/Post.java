@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
+@NamedEntityGraph(name = "post_entity-graph", attributeNodes = @NamedAttributeNode("postImages"))
 public class Post {
 
     @Id
