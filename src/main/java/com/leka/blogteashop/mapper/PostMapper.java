@@ -45,7 +45,7 @@ public class PostMapper {
         String content = post.getContent();
         List<Image> postImages = post.getPostImages();
         Long backgroundImageId = null;
-        if (!postImages.isEmpty()) {
+        if (postImages != null && !postImages.isEmpty()) {
             for (Image postImage : postImages) {
                 if (postImage.getImageName().startsWith(PREFIX_BACKGROUND_IMAGE)) {
                     backgroundImageId = postImage.getImageId();

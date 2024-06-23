@@ -80,7 +80,7 @@
                             <label for="titleUA" class="form-label" th:text="#{placeholder.post.titleUA}">
                                 Enter the title in Ukrainian:</label>
                         </h5>
-                        <h2><textarea type="text" id="titleUA" cols="40" th:field="*{titleUA}"></textarea></h2>
+                        <h2><textarea type="text" id="titleUA" cols="40" th:field="*{titleUA}" ></textarea></h2>
                         <h6 class="error-style" th:if="${#fields.hasErrors('titleUA')}" th:errors="*{titleUA}">
                             Incorrect data</h6>
                         <!-- form for entering the post title -->

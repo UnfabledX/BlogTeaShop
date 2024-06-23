@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Clean Blog - Start Bootstrap Theme</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+          rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" th:href="@{/to-main-online-shop}">Notka Tea</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/}" th:text="#{home}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false" th:text="#{chooseLang}">
+                        Choose language
+                    </a>
+                    <ul class="dropdown-menu" style="left: auto; --bs-dropdown-bg: #ffffff4d;">
+                        <li><a class="dropdown-item" th:href="@{'/edit-about?lang=en'}" href="#"
+                               th:text="#{lang.en}">English</a></li>
+                        <li><a class="dropdown-item" th:href="@{'/edit-about?lang=ukr'}" href="#"
+                               th:text="#{lang.ukr}">Ukrainian</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/about}" th:text="#{about}">About</a>
+                </li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/contact}"
+                                        th:text="#{contact}">Contact</a></li>
+                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" th:href="@{/create-post}" th:text="#{create.post}">Create a
+                        Post</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="#">
+                        [[#{user.greeting}]]<span sec:authentication="name"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<form action="#" th:action="@{'/editAbout'}" th:object="${post}" method="post"
+      enctype="multipart/form-data">
+    <!-- Page Header-->
+    <header class="masthead" th:if="${post.backgroundImageId == null}"
+            th:style="'background-image:url(' + @{/assets/img/about-bg.jpg} + ');'">
+        <div th:replace="~{::header-for-about-me}"></div>
+    </header>
+    <header class="masthead" th:if="${post.backgroundImageId != null}"
+            th:style="'background-image:url(' + @{'/image/' + ${post.backgroundImageId}} + ');'">
+        <div class="container position-relative px-4 px-lg-5" th:fragment="header-for-about-me">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="page-heading">
+                        <input type="hidden" th:field="*{id}">
+                        <h5><label for="inputTitleUA" class="form-label" th:text="#{post.titleUA}">The Title in Ukrainian:</label></h5>
+                        <h2><input type="text" id="inputTitleUA" th:field="*{titleUA}" readonly></h2>
+                        <h5><label for="inputTitleEN" class="form-label" th:text="#{post.titleEN}">The Title in English:</label></h5>
+                        <h2><input type="text" id="inputTitleEN" th:field="*{titleEN}" readonly></h2>
+
+                        <div class="subheading">
+                            <!-- form for entering the post subtitle -->
+                            <h5>
+                                <label for="subtitleUA" class="form-label" th:text="#{placeholder.post.subtitleUA}">
+                                    Enter the subtitle in Ukrainian:</label>
+                            </h5>
+                            <h2><textarea type="text" id="subtitleUA" cols="30" th:field="*{subtitleUA}"></textarea></h2>
+                            <h6 class="error-style" th:if="${#fields.hasErrors('subtitleUA')}" th:errors="*{subtitleUA}">
+                                Incorrect data</h6>
+                            <h5>
+                                <label for="subtitleEN" class="form-label" th:text="#{placeholder.post.subtitleEN}">
+                                    Enter the subtitle in English:</label>
+                            </h5>
+                            <h2><textarea type="text" id="subtitleEN" cols="30" th:field="*{subtitleEN}"></textarea></h2>
+                            <h6 class="error-style" th:if="${#fields.hasErrors('subtitleEN')}" th:errors="*{subtitleEN}">
+                                Incorrect data</h6>
+                        </div>
+                        <p>
+                            <label for="formFile" class="form-label" th:text="#{label.updateImage}">Update the image for the background:</label>
+                            <input class="form-control" type="file" name="backgroundImage" id="formFile">
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content-->
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Content in Ukrainian -->
+                    <label for="contentUA" class="form-label" th:text="#{contentUA}">Content in Ukrainian</label>
+                    <textarea id="contentUA" name="contentUA" rows="10" cols="50" th:field="*{contentUA}"></textarea>
+                    <p class="error-style" th:if="${#fields.hasErrors('contentUA')}" th:errors="*{contentUA}">Incorrect
+                        data</p>
+                    <!-- Content in English -->
+                    <label for="contentEU" class="form-label" th:text="#{contentEN}">Content in English</label>
+                    <textarea id="contentEU" name="contentEU" rows="10" cols="50" th:field="*{contentEN}"></textarea>
+                    <p class="error-style" th:if="${#fields.hasErrors('contentEN')}" th:errors="*{contentEN}">Incorrect
+                        data</p>
+                    <button class="btn btn-success mb-3" type="submit" th:text="#{update.post}">Update "About me"</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</form>
+<!-- Footer-->
+<footer class="border-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <ul class="list-inline text-center">
+                    <li class="list-inline-item">
+                        <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="small text-center text-muted fst-italic">Copyright &copy; Notka Tea 2024</div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.7/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+<!-- Core theme JS-->
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

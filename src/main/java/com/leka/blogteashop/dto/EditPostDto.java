@@ -3,9 +3,7 @@ package com.leka.blogteashop.dto;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-@ToString
-@Setter
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

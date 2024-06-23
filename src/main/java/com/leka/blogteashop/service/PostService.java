@@ -21,4 +21,10 @@ public interface PostService {
     void editPost(Long postId, EditPostDto postDto, MultipartFile bgImage, List<MultipartFile> postImages);
 
     Page<PostResponse> getPosts(Pageable pageable);
+
+    PostResponse getPostByTitle(String title);
+
+    void editAbout(EditPostDto postDto, MultipartFile bgImage);
+
+    EditPostDto getEditPostByTitle(String aboutMeTitle);
 }

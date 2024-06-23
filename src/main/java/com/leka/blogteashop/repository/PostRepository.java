@@ -11,5 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @EntityGraph(type = EntityGraph.EntityGraphType.FETCH, value = "post_entity-graph")
-    Page<Post> findAll(Pageable pageable);
+    Page<Post> findAllByTitleNotContaining(Pageable pageable, String titleAboutMe);
+
+    Post findByTitleContaining(String title);
+
+    boolean existsByTitleContaining(String title);
 }

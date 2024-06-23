@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.leka.blogteashop.controller.BlogController.ABOUT_ME_TITLE;
+
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -65,7 +67,7 @@ public class PostServiceImpl implements PostService {
         MultipartBodyBuilder builder;
         if (bgFile != null && !bgFile.isEmpty()) {
             boolean isUpdated = false;
-            for (Image image: postImages) {
+            for (Image image : postImages) {
                 if (image.getImageName().startsWith(PREFIX_BACKGROUND_IMAGE)) {
                     builder = createFrom(bgFile, true);
                     Long imageId = image.getImageId();
@@ -89,7 +91,7 @@ public class PostServiceImpl implements PostService {
             //don't include references to image names. If the admin forgets to delete in English version for example,
             // the image won't be deleted in general and will be shown in English content only.
             if (!StringUtils.contains(postDto.getContentUA(), target)
-                    && !StringUtils.contains(postDto.getContentEN(), target) ){
+                    && !StringUtils.contains(postDto.getContentEN(), target)) {
                 Long imageId = image.getImageId();
                 mediaService.deleteImageById(imageId);
                 iterator.remove();
@@ -103,7 +105,52 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostResponse> getPosts(Pageable pageable) {
-        return postRepository.findAll(pageable).map(postMapper::toResponse);
+        return postRepository.findAllByTitleNotContaining(pageable, ABOUT_ME_TITLE)
+                .map(postMapper::toResponse);
+    }
+
+    @Override
+    public PostResponse getPostByTitle(String title) {
+        Post post;
+        if (postRepository.existsByTitleContaining(title)) {
+            post = postRepository.findByTitleContaining(title);
+        } else {
+            post = postRepository.save(getDefaultInfoAboutMe());
+        }
+        return postMapper.toResponse(post);
+    }
+
+
+    @Override
+    @Transactional
+    public void editAbout(EditPostDto postDto, MultipartFile bgFile) {
+        Post post = getPost(postDto.getId());
+        postMapper.updatePost(post, postDto);
+        List<Image> postImages = post.getPostImages();
+        if (bgFile != null && !bgFile.isEmpty()) {
+            boolean isUpdated = false;
+            for (Image image : postImages) {
+                if (image.getImageName().startsWith(PREFIX_BACKGROUND_IMAGE)) {
+                    MultipartBodyBuilder builder = createFrom(bgFile, true);
+                    Long imageId = image.getImageId();
+                    ImageDto imageDto = mediaService.updateImageById(imageId, builder);
+                    image.setImageName(imageDto.getFileName());
+                    isUpdated = true;
+                    break;
+                }
+            }
+            if (!isUpdated) {
+                uploadBackgroundImageToPost(bgFile, post);
+            }
+        }
+        postRepository.save(post);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EditPostDto getEditPostByTitle(String aboutMeTitle) {
+        Post post = postRepository.findByTitleContaining(aboutMeTitle);
+        return postMapper.toEditPostDto(post);
     }
 
     private MultipartBodyBuilder createFrom(MultipartFile file, boolean isBackground) {
@@ -146,4 +193,13 @@ public class PostServiceImpl implements PostService {
         post.addImage(new Image(bgImage.getId(), bgImage.getFileName(), post));
     }
 
+
+    private static Post getDefaultInfoAboutMe() {
+        return Post.builder()
+                .title("Про мене#&#" + ABOUT_ME_TITLE)
+                .subtitle("Чим я займаюсь#&#This is what I do.")
+                .content("<p>Необхідно заповнити</p>#&#<p>Need to fill it up</p>")
+                .author("admin")
+                .build();
+    }
 }

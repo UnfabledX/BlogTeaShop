@@ -17,9 +17,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,6 +36,7 @@ import static com.leka.blogteashop.utils.Validator.validateImageNamingInContent;
 public class BlogController {
 
     public static final int DEFAULT_SIZE = 5;
+    public static final String ABOUT_ME_TITLE = "About Me";
 
     private final JwtService jwtService;
     private final AuthService authService;
@@ -54,8 +53,28 @@ public class BlogController {
     }
 
     @GetMapping("/about")
-    public String getAbout() {
+    public String getAbout(Model model) {
+        PostResponse response = postService.getPostByTitle(ABOUT_ME_TITLE);
+        model.addAttribute("post", response);
         return "about";
+    }
+
+    @GetMapping("/edit-about")
+    public String getEditAbout(Model model) {
+        EditPostDto editPostDto = postService.getEditPostByTitle(ABOUT_ME_TITLE);
+        model.addAttribute("post", editPostDto);
+        return "edit-about";
+    }
+
+    @PostMapping("/editAbout")
+    public String postEditAbout(@RequestParam(value = "backgroundImage", required = false) MultipartFile bgImage,
+                                @Valid @ModelAttribute("post") EditPostDto postDto,
+                                BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return  getEditAbout(model);
+        }
+        postService.editAbout(postDto, bgImage);
+        return "redirect:/about";
     }
 
     @GetMapping("/contact")
