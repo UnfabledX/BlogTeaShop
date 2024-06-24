@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Error</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+        crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+          crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="text-center">
+    <h1 class="display-1 fw-bold" >404</h1>
+    <p class="fs-3"> <span class="text-danger">[[#{oops}]]&nbsp;</span>[[#{page.not.found}]]</p>
+    <p class="lead" th:text="#{page.not.exists}">The page you’re looking for doesn't exist.</p>
+    <a href="#" th:href="@{/}" class="btn btn-primary" th:text="#{go.home}">Go To The Home Page</a>
+  </div>
+</body>
+</html>
