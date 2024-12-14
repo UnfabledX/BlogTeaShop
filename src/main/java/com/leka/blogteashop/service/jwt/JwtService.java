@@ -2,7 +2,7 @@ package com.leka.blogteashop.service.jwt;
 
 import com.leka.blogteashop.service.jwt.config.JwtConfiguration;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.DefaultJwtParserBuilder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class JwtService {
     private final JwtConfiguration.JwtProperties jwtProperties;
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secretkey());
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -41,11 +41,11 @@ public class JwtService {
      * @return claims that holds specific information about the user etc.
      */
     public Claims getAllClaims(String jwtToken) {
-        return Jwts.parserBuilder()
+        return new DefaultJwtParserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJws(jwtToken)
-                .getBody();
+                .parseSignedClaims(jwtToken)
+                .getPayload();
     }
 
     private Date getExpirationDate(String jwtToken) {

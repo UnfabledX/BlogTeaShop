@@ -9,7 +9,7 @@ import com.leka.blogteashop.repository.PostRepository;
 import com.leka.blogteashop.service.MediaService;
 import com.leka.blogteashop.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -16,10 +16,10 @@ public class JwtConfiguration {
   /**
    * Jwt properties.
    *
-   * @param secretkey key which is used for encoding signature of the jwt token
+   * @param secretKey key which is used for encoding signature of the jwt token
    */
   @ConfigurationProperties(prefix = "jwt.options")
-  public record JwtProperties(String secretkey) {
+  public record JwtProperties(String secretKey) {
 
   }
 }
