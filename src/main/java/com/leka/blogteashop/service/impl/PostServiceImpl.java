@@ -153,6 +153,18 @@ public class PostServiceImpl implements PostService {
         return postMapper.toEditPostDto(post);
     }
 
+    @Override
+    @Transactional
+    public void deleteById(Long postId) {
+        postRepository.findById(postId).ifPresent(post -> {
+            List<Image> postImages = post.getPostImages();
+            if (postImages != null && !postImages.isEmpty()) {
+                postImages.forEach(image -> mediaService.deleteImageById(image.getImageId()));
+            }
+            postRepository.delete(post);
+        });
+    }
+
     private MultipartBodyBuilder createFrom(MultipartFile file, boolean isBackground) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         try {

@@ -27,4 +27,6 @@ public interface PostService {
     void editAbout(EditPostDto postDto, MultipartFile bgImage);
 
     EditPostDto getEditPostByTitle(String aboutMeTitle);
+
+    void deleteById(Long postId);
 }

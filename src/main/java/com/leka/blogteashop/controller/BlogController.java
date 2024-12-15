@@ -156,6 +156,12 @@ public class BlogController {
         return "redirect:/post/" + postId;
     }
 
+    @GetMapping("/deletePost/{postId}")
+    public String deletePost(@PathVariable Long postId) {
+        postService.deleteById(postId);
+        return "redirect:/";
+    }
+
     @ResponseBody
     @GetMapping("/image/{id}")
     public byte[] getImageById(@PathVariable("id") Long id) {
