@@ -145,17 +145,6 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" th:src="@{webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
 <!-- Core theme JS-->
-<script th:src="@{/js/scripts.js}"></script>
-<script type="text/javascript" th:src="@{webjars/jquery/3.6.0/jquery.min.js}"></script>
-
-<script th:inline="javascript">
-    $("#older-posts").click(
-        function getNextPosts() {
-            $.post(/*[[@{/loadMorePosts}]]*/).done(function (fragment) {
-                console.log(fragment);
-                $("#list-of-posts").replaceWith(fragment);
-            });
-        })
-</script>
+<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
 </body>
 </html>
