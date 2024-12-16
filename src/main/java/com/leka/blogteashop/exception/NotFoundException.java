@@ -2,9 +2,10 @@ package com.leka.blogteashop.exception;
 
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
-public class NotFoundException extends RuntimeException{
+public class NotFoundException extends RuntimeException {
 
     private String value;
 
@@ -17,7 +18,7 @@ public class NotFoundException extends RuntimeException{
         this.value = value;
     }
 
-    public String getWrongValue(){
+    public String getWrongValue() {
         return value;
     }
 }

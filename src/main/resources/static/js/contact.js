@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const toastElement = document.getElementById('successToast');
-    if (toastElement) {
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
+    const successToast = document.getElementById('successToast');
+    showToast(successToast);
+    const errorToast = document.getElementById('errorToast');
+    showToast(errorToast);
+
+    function showToast(toastElement) {
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
     }
 });
 
