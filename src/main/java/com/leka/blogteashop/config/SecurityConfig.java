@@ -21,7 +21,8 @@ public class SecurityConfig {
                                 "/create-post",
                                 "/addPost",
                                 "/edit-post/**",
-                                "/editPost/**"
+                                "/editPost/**",
+                                "/deletePost/**"
                         ).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(PathRequest.toStaticResources()
                                 .atCommonLocations()).permitAll()

@@ -77,10 +77,7 @@ public class BlogController {
         return "redirect:/about";
     }
 
-    @GetMapping("/contact")
-    public String getContacts() {
-        return "contact";
-    }
+
 
     @GetMapping("/main")
     public String getMainPage(@RequestParam(value = "token", required = false) String token,

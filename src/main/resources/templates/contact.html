@@ -68,12 +68,27 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="page-heading">
                     <h1 th:text="#{contact.me.title}">Contact Me</h1>
-                    <span class="subheading" th:text="#{contact.me.title}">Have questions? I have answers.</span>
+                    <span class="subheading" th:text="#{contact.me.subtitle}">Have questions? I have answers.</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
+<div th:if="${param.success}">
+<!--     trigger a toast message that the message is sent successfully-->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" th:text="#{toast.contact.message}">
+                    Message sent successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Main Content-->
 <main class="mb-4">
     <div class="container px-4 px-lg-5">
@@ -82,37 +97,38 @@
                 <p th:text="#{contact.message}">Want to get in touch? Fill out the form below to send me a message
                     and I will get back to you as soon as possible!</p>
                 <div class="my-5">
-                    <form id="contactForm" action="#" th:action="@{'/addPost'}" th:object="${contactMessage}"
+                    <form id="contactForm" action="#" th:action="@{'/sendContactMessage'}" th:object="${contactDto}"
                           method="post">
                         <div class="form-floating">
                             <input class="form-control" id="name" type="text" th:placeholder="#{enter.name}"
-                                   data-sb-validations="required"/>
+                                   th:field="*{name}"/>
                             <label for="name" th:text="#{name}">Name</label>
-                            <!--                                    VALIDATION-->
+                            <div class="error-style" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                Incorrect data</div>
                         </div>
                         <div class="form-floating">
-                            <input class="form-control" id="email" type="email" th:placeholder="#{enter.email}"
-                                   data-sb-validations="required,email"/>
+                            <input class="form-control" id="email" type="text" th:placeholder="#{enter.email}"
+                                   th:field="*{email}"/>
                             <label for="email" th:text="#{email}">Email address</label>
-                            <!--                                    VALIDATION-->
+                            <div class="error-style" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                                Incorrect data</div>
                         </div>
                         <div class="form-floating">
-                            <input class="form-control" id="phone" type="tel" th:placeholder="#{enter.phone}"/>
+                            <input class="form-control" id="phone" type="text" th:placeholder="#{enter.phone}"
+                                   th:field="*{phone}"/>
                             <label for="phone" th:text="#{phone}">Phone Number</label>
+                            <div class="error-style" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">
+                                Incorrect data</div>
                         </div>
                         <div class="form-floating">
-                                    <textarea class="form-control" id="message" th:placeholder="#{enter.message}"
-                                              style="height: 12rem" data-sb-validations="required"></textarea>
+                            <textarea class="form-control" id="message" th:placeholder="#{enter.message}"
+                                      style="height: 12rem" data-sb-validations="required" th:field="*{message}"></textarea>
                             <label for="message" th:text="#{message}">Message</label>
-                            <!--                                    VALIDATION-->
+                            <div class="error-style" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">
+                                Incorrect data</div>
                         </div>
                         <br/>
-                        <!-- Submit success message-->
-                        <!--   !!!IMPLEMENT!!! todo-->
-
-                        <!-- Submit Button-->
-                        <button class="btn btn-primary text-uppercase disabled" id="submitButton" type="submit">Send
-                        </button>
+                        <button class="btn btn-primary text-uppercase" id="submitButton" type="submit">Send</button>
                     </form>
                 </div>
             </div>
@@ -160,6 +176,7 @@
         crossorigin="anonymous"></script>
 <script type="text/javascript" th:src="@{webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
 <!-- Core theme JS-->
-<script th:src="@{/js/scripts.js}"></script>
+<script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+<script type="text/javascript" th:src="@{/js/contact.js}"></script>
 </body>
 </html>
