@@ -18,7 +18,4 @@ public class NotFoundException extends RuntimeException {
         this.value = value;
     }
 
-    public String getWrongValue() {
-        return value;
-    }
 }

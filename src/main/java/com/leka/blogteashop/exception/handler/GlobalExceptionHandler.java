@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(CounterLimitException.class)
     public String handleUserAlreadyExistsException(CounterLimitException ex) {

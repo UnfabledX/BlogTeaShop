@@ -18,20 +18,24 @@ public class SessionContextHolder {
 
     @Value("${contact.tries.threshold}")
     private int counterThresholdInOneHour;
+    @Value("${contact.tries.cooldown}")
+    private Duration coolDownDuration;
     private final Map<String, List<Instant>> mapHolder = new HashMap<>();
 
-    //need testing todo
     public void checkSpamCounterForSession(HttpSession session) {
-        cleanCache(mapHolder);
+        Instant now = Instant.now();
+        if (mapHolder.size() > 50) {
+            cleanCache(mapHolder, now);
+        }
         String sessionId = session.getId();
         List<Instant> numberOfTries = mapHolder.getOrDefault(sessionId, new ArrayList<>());
         if (numberOfTries.isEmpty()) {
-            numberOfTries.add(Instant.now());
+            numberOfTries.add(now);
+            mapHolder.put(sessionId, numberOfTries);
             return;
         }
-        Instant now = Instant.now();
         List<Instant> newTries = numberOfTries.stream()
-                .filter(instant -> Duration.between(now, instant).toMillis() <= Duration.ofHours(1).toMillis())
+                .filter(instant -> Duration.between(now, instant).toMillis() <= coolDownDuration.toMillis())
                 .collect(Collectors.toList());
         if (newTries.size() < counterThresholdInOneHour) {
             newTries.add(now);
@@ -41,20 +45,28 @@ public class SessionContextHolder {
         }
     }
 
-    private void cleanCache(Map<String, List<Instant>> mapHolder) {
-        Instant now = Instant.now();
-        List<String> oldSessionIds = mapHolder.entrySet().stream()
-                .filter(entry -> getOld(entry, now))
-                .map(Map.Entry::getKey)
-                .toList();
+    public void cleanCache(Map<String, List<Instant>> mapHolder, Instant now) {
+        List<String> oldSessionIds = new ArrayList<>();
+        for (Map.Entry<String, List<Instant>> entry : mapHolder.entrySet()) {
+            String sessionId = entry.getKey();
+            List<Instant> tries = entry.getValue();
+            if (areAllOldRecords(tries, now)) {
+                oldSessionIds.add(sessionId);
+                continue;
+            }
+            tries.removeIf(instant -> isOldRecord(instant, now));
+        }
         if (!oldSessionIds.isEmpty()) {
             oldSessionIds.forEach(mapHolder::remove);
         }
     }
 
-    private static boolean getOld(Map.Entry<String, List<Instant>> entry, Instant now) {
-        List<Instant> value = entry.getValue();
-        Instant last = value.get(value.size() - 1);
-        return Duration.between(now, last).toMillis() > Duration.ofHours(1).toMillis();
+    private boolean areAllOldRecords(List<Instant> tries, Instant now) {
+        Instant last = tries.get(tries.size() - 1);
+        return isOldRecord(last, now);
+    }
+
+    private boolean isOldRecord(Instant record, Instant now) {
+        return Duration.between(record, now).toMillis() > coolDownDuration.toMillis();
     }
 }

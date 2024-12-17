@@ -2,14 +2,14 @@ package com.leka.blogteashop.event.listener;
 
 import com.leka.blogteashop.dto.ContactDto;
 import com.leka.blogteashop.event.ContactEmailEvent;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-
-
+@Log4j2
 @Component
 public class ContactEmailEventListener {
 
@@ -30,6 +30,7 @@ public class ContactEmailEventListener {
         ContactDto contact = event.getContact();
         SimpleMailMessage message = getMessage(contact);
         mailSender.send(message);
+        log.info("Message from contact {} is sent", contact);
     }
 
     private SimpleMailMessage getMessage(ContactDto contact) {
